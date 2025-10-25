@@ -6,7 +6,7 @@ class dsu {
     
     dsu(int _n) : n(_n) {
         p.resize(n);
-        iota(p.begin(), p.end(), 0);
+        ranges::iota(p, 0);
         rank.resize(n, 0);
         setsize.assign(n, 1);
         numset = n;

@@ -1,4 +1,4 @@
-class Tree {
+class BinaryLift {
 public:
     int n;
     int l;
@@ -6,16 +6,16 @@ public:
     vector<vector<int>> up;
     vector<vector<int>> adj;
 
-    Tree() : n(0) {}
+    BinaryLift() : n(0) {}
 
-    Tree(const vector<vector<int>> &g) {
+    BinaryLift(const vector<vector<int>> &g) {
         n = g.size();
         l = __lg(n);
         depth.assign(n, 0);
         up.assign(n, vector<int>(l + 1));
         adj = g;
     }
-    
+
     // remember to call t.dfs(root, root)
     void dfs(int u, int p) {
         up[u][0] = p;
@@ -27,6 +27,15 @@ public:
             depth[v] = depth[u] + 1;
             dfs(v, u);
         }
+    }
+
+    int kth(int u, int k) const {
+        for (int i = l; i >= 0; i--) {
+            if (k & (1 << i)) {
+                u = up[u][i];
+            }
+        }
+        return u;
     }
 
     int lca(int u, int v) const {

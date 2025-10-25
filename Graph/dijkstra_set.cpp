@@ -1,5 +1,4 @@
 // dijkstra's for non negative weights
-// returns inf if there's no path
 vector<ll> dist(n, inf);
 set<pair<ll, int>> s;
 dist[start] = 0;

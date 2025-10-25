@@ -6,9 +6,10 @@ for (int u = 0; u < n; u++) {
         rev[v].push_back(u);
     }
 }
+
 vector<int> order;
 vector<bool> vis(n, false);
-function<void(int)> dfs1 = [&](int u) {
+auto dfs1 = [&](this auto dfs1, int u) -> void {
     vis[u] = 1;
     for (auto v : g[u]) {
         if (!vis[v]) {
@@ -17,14 +18,16 @@ function<void(int)> dfs1 = [&](int u) {
     }
     order.push_back(u);
 };
+
 for (int i = 0; i < n; i++) {
     if (!vis[i]) {
         dfs1(i);
     }
 }
+
 int cnt = 0; // this gives the no of strongly connected components
 vector<int> c(n, -1); // // c[i] = component id of node i
-function<void(int)> dfs2 = [&](int u) {
+auto dfs2 = [&](this auto dfs2, int u) -> void {
     for (auto v : rev[u]) {
         if (c[v] == -1) {
             c[v] = c[u];
@@ -32,6 +35,7 @@ function<void(int)> dfs2 = [&](int u) {
         }
     }
 };
+
 for (int id = n - 1; id >= 0; id--) {
     int i = order[id];
     if (c[i] == -1) {
@@ -39,6 +43,7 @@ for (int id = n - 1; id >= 0; id--) {
         dfs2(i);
     }
 }
+
 vector<vector<int>> scc(cnt);
 for (int i = 0; i < n; ++i) {
     scc[c[i]].push_back(i);
