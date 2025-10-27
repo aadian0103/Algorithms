@@ -2,10 +2,9 @@
 using namespace std;
 
 #ifndef ONLINE_JUDGE
-#include "debug.h"
+#include "debug.cpp"
 #else
 #define debug(...)
-#define debugArr(...)
 #endif
 
 #define nl '\n'
