@@ -18,12 +18,12 @@ T rnd(T a, T b) {
     return dist(RNG);
 }
 
-
 void solve(){
-    //generated randon value of n from 1 to x
+    //generated randon value of n from l to r
     int n = rnd(1,8);
 
-    //generating random vector having values from 1 to y
+    //generating random vector having values from l to r
+    vector<int> a(n);
     for (int i = 0; i < n; i++){
         a[i] = rnd(1,100000);
     }
@@ -39,11 +39,13 @@ void solve(){
     //put you solution in here
 
 
-    //compare the both the answers and get the Test Case
+    //compare both the answers and get the Test Case
 
     if (brute_ans != ans){
         cout << n << nl;
-        for(int i = 0; i < n; i++) cout << a[i] << " ";
+        for (int i = 0; i < n; i++) {
+            cout << a[i] << " ";
+        }
         cout << nl;
         cout << brute_ans << " " << ans << nl;
         exit(0);
@@ -59,4 +61,3 @@ int main() {
         solve();
     }
 }
-

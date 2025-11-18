@@ -1,6 +1,6 @@
 vector<int> LinearSieve(int n) {
-    vector<T> lp(n + 1); //gives the smallest prime factor for every element
-    vector<T> pr;
+    vector<int> lp(n + 1); //gives the smallest prime factor for every element
+    vector<int> pr;
     for (int i = 2; i <= n; i++) {
         if (lp[i] == 0){
             lp[i] = i;
@@ -12,6 +12,6 @@ vector<int> LinearSieve(int n) {
                 break;
             }
         }
-    return ${1 : lp};
+    }
+    return ${1:pr};
 }
-
