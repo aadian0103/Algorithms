@@ -1,10 +1,8 @@
 class BinaryLift {
 public:
-    int n;
-    int l;
+    int n, l;
     vector<int> depth;
-    vector<vector<int>> up;
-    vector<vector<int>> adj;
+    vector<vector<int>> up, adj;
 
     BinaryLift() : n(0) {}
 

@@ -58,17 +58,19 @@ vector<pair<int,int>> gen_graph(int n, int m, bool allow_self = false) {
     return edges;
 }
 
-void solve() {
+string gen_string(int n, char L = 'a', char R = 'z') {
+    string s(n, 'a');
+    for (char &c : s) c = rnd(L, R);
+    return s;
+}
 
+void solve() {
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    int t = 1;
-    cin >> t;
-    while (t--) {
-        solve();
-    }
+
+    solve();
 }
 

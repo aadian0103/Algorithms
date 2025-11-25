@@ -24,13 +24,11 @@ for root, _, files in os.walk('.'):
         with open(path, 'r', encoding='utf-8') as f:
             lines = [line.rstrip('\n') for line in f]
 
-        # Optional description from first comment line
         desc = ""
         if lines and lines[0].strip().startswith('//'):
             desc = lines[0].strip().lstrip('/').strip()
             lines = lines[1:]
 
-        # Escape special chars
         escaped_lines = [f'"{escape_lua_string(line)}"' for line in lines]
 
         if desc:
@@ -41,7 +39,6 @@ for root, _, files in os.walk('.'):
         snippets.append(snippet)
         print(f"Generated snippet {name}", file=sys.stderr)
 
-# Write LuaSnip file
 with open('cpp.lua', 'w', encoding='utf-8') as f:
     f.write("-- Auto-generated LuaSnip snippets for C++\n")
     f.write("return {\n")

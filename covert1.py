@@ -1,4 +1,3 @@
-# generate cpp snippet for vscode
 import os
 import json
 import sys
@@ -6,7 +5,6 @@ import sys
 snippets = {}
 
 for root, _, files in os.walk('.'):
-    # Skip .git folders
     if '.git' in root:
         continue
 
@@ -17,7 +15,6 @@ for root, _, files in os.walk('.'):
         if extension != 'cpp':
             continue
 
-        # Avoid duplicates
         if name in snippets:
             print(f'Error: duplicate snippet {name}', file=sys.stderr)
             exit(1)
@@ -34,7 +31,6 @@ for root, _, files in os.walk('.'):
 
         print(f'Generated snippet {name}', file=sys.stderr)
 
-# Write to cpp.json
 with open('cpp.json', 'w') as f:
     json.dump(snippets, f, indent=2)
 

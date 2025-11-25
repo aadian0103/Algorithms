@@ -1,15 +1,13 @@
 // only use for idempotent functions like min, max, gcd, etc.
 // also the query gives the ans for [l,,,r] (inclusive)
-template <typename T>
+template <typename T, typename F>
 class SparseTable {
 public:
     int n;
     vector<vector<T>> table;
+    F func;
 
-    T func(const T &a, const T &b) const {
-        return min(a, b);
-    }
-    SparseTable(const vector<T> &a) : n((int)a.size()) {
+    SparseTable(const vector<T> &a, const F &f) : n(static_cast<int>(a.size())), func(f) {
         int mxLg = __lg(n) + 1;
         table.resize(mxLg);
         table[0] = a;
@@ -20,8 +18,9 @@ public:
             }
         }
     }
-    T Query(const int l, const int r) const {
-        assert(l >= 0 && l <= r && r <= n - 1);
+
+    T query(int l, int r) const {
+        assert(0 <= l && l <= r && r <= n - 1);
         int lg = __lg(r - l + 1);
         return func(table[lg][l], table[lg][r - (1 << lg) + 1]);
     }
