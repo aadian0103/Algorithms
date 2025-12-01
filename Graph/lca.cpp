@@ -1,12 +1,9 @@
-class BinaryLift {
-public:
+struct tree {
     int n, l;
     vector<int> depth;
     vector<vector<int>> up, adj;
 
-    BinaryLift() : n(0) {}
-
-    BinaryLift(const vector<vector<int>> &g) {
+    tree(const vector<vector<int>>& g) {
         n = g.size();
         l = __lg(n);
         depth.assign(n, 0);
@@ -27,7 +24,7 @@ public:
         }
     }
 
-    int kth(int u, int k) const {
+    inline int kth(int u, int k) const {
         for (int i = l; i >= 0; i--) {
             if (k & (1 << i)) {
                 u = up[u][i];
@@ -36,7 +33,7 @@ public:
         return u;
     }
 
-    int lca(int u, int v) const {
+    inline int lca(int u, int v) const {
         if (depth[u] < depth[v]) swap(u, v);
         int k = depth[u] - depth[v];
         for (int i = l; i >= 0; i--) {
@@ -54,7 +51,7 @@ public:
         return up[u][0];
     }
 
-    int dist(int u, int v) const {
+    inline int dist(int u, int v) const {
         return depth[u] + depth[v] - 2 * depth[lca(u, v)];
     }
 };
