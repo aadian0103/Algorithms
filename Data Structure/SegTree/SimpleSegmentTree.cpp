@@ -22,6 +22,7 @@ public:
     void build(int v, int l, int r, const vector<T> &a) {
         if (r - l == 1) {
             segTree[v] = a[l];
+            return;
         }
         else {
             int m = (l + r) / 2;
@@ -32,31 +33,19 @@ public:
     }
 
     void pointUpdate(int pos, const Info &value, int v = 1, int l = -1, int r = -1) {
-        if (l == -1 && r == -1) {
-            l = 0;
-            r = n;
-        }
+        if (l == -1 && r == -1) { l = 0; r = n; }
         assert(pos >= 0);
-        if (r - l == 1) {
-            segTree[v] = value;
-        }
+        if (r - l == 1) segTree[v] = value;
         else {
             int m = (l + r) / 2;
-            if (pos < m) {
-                pointUpdate(pos, value, 2 * v, l, m);
-            }
-            else {
-                pointUpdate(pos, value, 2 * v + 1, m, r);
-            }
+            if (pos < m) pointUpdate(pos, value, 2 * v, l, m);
+            else pointUpdate(pos, value, 2 * v + 1, m, r);
             segTree[v] = segTree[2 * v] + segTree[2 * v + 1];
         }
     }
 
     Info rangeQuery(int tl, int tr, int v = 1, int l = -1, int r = -1) {
-        if (l == -1 && r == -1) {
-            l = 0;
-            r = n;
-        }
+        if (l == -1 && r == -1) { l = 0; r = n; }
         assert(tl >= 0 && tl <= tr && tr <= n);
         if (l >= tr || r <= tl) return Info();
         if (l >= tl && r <= tr) return segTree[v];

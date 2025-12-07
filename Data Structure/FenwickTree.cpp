@@ -3,19 +3,12 @@ struct Fenwick {
     int n;
     vector<T> bit;
 
-    Fenwick(int n = 0) {
-        init(n);
-    }
-
-    void init(int n_) {
-        n = n_;
-        bit.assign(n, T());
-    }
+    constexpr Fenwick() noexcept : n(0) {}
+    explicit Fenwick(int n_) : n(n_), bit(n_, T{}) {}
 
     // build from a vector, optimized build - O(n)
-    Fenwick(const vector<T>& b) : Fenwick(static_cast<int>(b.size())) {
+    explicit Fenwick(const vector<T>& a) : n((int)a.size()), bit(a) {
         for (int i = 0; i < n; i++) {
-            bit[i] += b[i];
             int r = i | (i + 1);
             if (r < n) bit[r] += bit[i];
         }
@@ -44,13 +37,19 @@ struct Fenwick {
         return sum(r) - sum(l);
     }
 
-    // smallest idx(0 based) such that prefix sum > k; returns n if none
-    int kth(T k) const {
+    // Returns largest x such that sum[0, x) <= k
+    int maxPrefix(T k) const {
+        if (n == 0) return 0;
+
         int x = 0;
+        T sum = T();
         for (int i = 1 << __lg(n); i > 0; i >>= 1) {
-            if (x + i <= n && bit[x + i - 1] <= k) {
-                x += i;
-                k -= bit[x - 1];
+            if (x + i <= n) {
+                T new_sum = sum + bit[x + i - 1];
+                if (new_sum <= k) {
+                    sum = new_sum;
+                    x += i;
+                }
             }
         }
         return x;
@@ -63,9 +62,9 @@ struct RURQ {
     int n;
     Fenwick<T> f1, f2;
 
-    RURQ(int n_) : n(n_), f1(n_), f2(n_) {}
+    explicit RURQ(int n_) : n(n_), f1(n_), f2(n_) {}
 
-    RURQ(const vector<T>& a) : RURQ(static_cast<int>(a.size())) {
+    explicit RURQ(const vector<T>& a) : n((int)a.size()), f1((int)a.size()), f2((int)a.size()) {
         for (int i = 0; i < n; i++) {
             range_add(i, i + 1, a[i]);
         }

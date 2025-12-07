@@ -1,32 +1,42 @@
 template<typename T>
-class dsu {
-    public:
-    unordered_map<T, T> p;
+struct dsu {
+    unordered_map<T, T> parent;
     unordered_map<T, int> sz;
+    int comps = 0;
 
-    dsu() {}
+    dsu() = default;
+    dsu(const vector<T>& a) {
+        for (const auto& x : a) {
+            add(x);
+        }
+    }
+
+    T add(const T& x) {
+        if (!parent.count(x)) {
+            parent[x] = x;
+            sz[x] = 1;
+            comps++;
+        }
+        return parent[x];
+    }
 
     T get(const T& x) {
-        if (!p.count(x)) {
-            p[x] = x;
-            sz[x] = 1;
-        }
-        return (x == p[x] ? x : (p[x] = get(p[x])));
+        if (!parent.count(x)) return add(x);
+        return parent[x] = (parent[x] == x ? x : get(parent[x]));
     }
 
-    bool unite(const T& x, const T& y) {
-        T a = get(x);
-        T b = get(y);
-        if (a != b) {
-            if (sz[a] < sz[b]) swap(a, b);
-            p[b] = a;
-            sz[a] += sz[b];
-            return true;
-        }
-        return false;
+    bool unite(const T& a, const T& b) {
+        T ra = get(a), rb = get(b);
+        if (ra == rb) return false;
+
+        if (sz[ra] < sz[rb]) swap(ra, rb);
+        parent[rb] = ra;
+        sz[ra] += sz[rb];
+        comps--;
+        return true;
     }
-    
-    int size(const T& x) {
-        return sz[get(x)];
-    }
+
+    int size(const T& x) { return sz[get(x)]; }
+    int count() const { return comps; }
+    bool same(const T& a, const T& b) { return get(a) == get(b); }
 };

@@ -1,44 +1,27 @@
-class dsu {
-    public: 
-    vector<int> p, rank, setsize;
-    int n;
-    int numset;
-    
-    dsu(int _n) : n(_n) {
-        p.resize(n);
-        ranges::iota(p, 0);
-        rank.resize(n, 0);
-        setsize.assign(n, 1);
-        numset = n;
+struct dsu {
+    vector<int> parent, sz;
+    int comps;
+
+    dsu(int n) : parent(n), sz(n, 1), comps(n) {
+        ranges::iota(parent, 0);
     }
-    
-    int get(int x) {
-        return (x == p[x] ? x : (p[x] = get(p[x])));
+
+    int get(int x) noexcept {
+        return parent[x] = (x == parent[x] ? x : get(parent[x]));
     }
-    
-    bool unite(int x, int y) {
-        x = get(x);
-        y = get(y);
-        if(x != y) {
-            if(rank[x] > rank[y]) {
-                swap(x, y);
-            }
-            p[x] = y;
-            if(rank[x] == rank[y]) {
-                ++rank[y];
-            }
-            setsize[y] += setsize[x];
-            numset--;
-            return true;
-        }
-        return false;
+
+    bool unite(int a, int b) noexcept {
+        a = get(a); b = get(b);
+        if (a == b) return false;
+
+        if (sz[a] < sz[b]) swap(a, b);
+        parent[b] = a;
+        sz[a] += sz[b];
+        comps--;
+        return true;
     }
-    
-    int numDisSet() {
-        return numset;
-    }
-    
-    int sizeOfSet(int x) {
-        return setsize[get(x)];
-    }
+
+    int size(int x) noexcept { return sz[get(x)]; }
+    int count() const noexcept { return comps; }
+    bool same(int a, int b) { return get(a) == get(b); }
 };
