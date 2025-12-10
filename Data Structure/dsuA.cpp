@@ -23,5 +23,5 @@ struct dsu {
 
     int size(int x) noexcept { return sz[get(x)]; }
     int count() const noexcept { return comps; }
-    bool same(int a, int b) { return get(a) == get(b); }
+    bool same(int a, int b) noexcept { return get(a) == get(b); }
 };

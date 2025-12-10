@@ -13,14 +13,18 @@ PEACH="\033[38;5;217m"
 MINT="\033[38;5;150m"
 RESET="\033[0m"
 
+cleanup() {
+    rm -f gen brute sol debug_in my_out ans_out
+}
+
 echo -e "${BLUE}Compiling...${RESET}"
 
-g++-15 gen.cpp $CFLAGS -o gen
-g++-15 brute.cpp $CFLAGS -o brute
-g++-15 sol.cpp $CFLAGS -o sol
+g++-15 $CFLAGS gen.cpp -o gen
+g++-15 $CFLAGS brute.cpp -o brute
+g++-15 $CFLAGS sol.cpp -o sol
 
 for ((i = start; ; ++i)); do
-    ./gen $i >debug_in
+    ./gen >debug_in
     ./sol <debug_in >my_out
     ./brute <debug_in >ans_out
 
@@ -44,3 +48,5 @@ echo ""
 
 echo -e "${MINT}Correct output:${RESET}"
 cat ans_out
+
+cleanup

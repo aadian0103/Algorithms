@@ -1,7 +1,6 @@
-vector<int> EulerianPath(int n, vector<pair<int, int>> &edges) {
-    vector<vector<pair<int,int>>> adj(n);
-    vector<int> indeg(n, 0), outdeg(n, 0);
-    vector<int> used(edges.size());
+vector<int> EulerianPath(int n, vector<pair<int, int>>& edges) {
+    vector<vector<pair<int, int>>> adj(n);
+    vector<int> indeg(n), outdeg(n), used(edges.size());
 
     for (int i = 0; i < (int)edges.size(); i++) {
         auto [u, v] = edges[i];
@@ -14,11 +13,9 @@ vector<int> EulerianPath(int n, vector<pair<int, int>> &edges) {
         if (outdeg[i] - indeg[i] == 1) {
             start = i;
             cntS++;
-        }
-        else if (indeg[i] - outdeg[i] == 1) {
+        } else if (indeg[i] - outdeg[i] == 1) {
             cntE++;
-        }
-        else if (indeg[i] != outdeg[i]) {
+        } else if (indeg[i] != outdeg[i]) {
             return {};
         }
     }
@@ -39,8 +36,7 @@ vector<int> EulerianPath(int n, vector<pair<int, int>> &edges) {
     vector<int> stk = {start}, path;
     while (!stk.empty()) {
         int v = stk.back();
-        while (!adj[v].empty() && used[adj[v].back().second])
-            adj[v].pop_back();
+        while (!adj[v].empty() && used[adj[v].back().second]) adj[v].pop_back();
         if (adj[v].empty()) {
             path.push_back(v);
             stk.pop_back();
