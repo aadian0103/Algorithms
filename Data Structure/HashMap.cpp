@@ -14,13 +14,13 @@ struct chash {
         return (size_t)splitmix64(x + FIXED_RANDOM);
     }
 
-    template <class A, class B>
+    template <typename A, typename B>
     size_t operator()(const pair<A, B> &p) const noexcept {
         uint64_t h1 = (*this)(p.first), h2 = (*this)(p.second);
         return (size_t)splitmix64(h1 ^ (h2 + 0x9e3779b97f4a7c15ULL + (h1 << 6) + (h1 >> 2)));
     }
 
-    template <class... Ts>
+    template <typename... Ts>
     size_t operator()(const tuple<Ts...> &t) const noexcept {
         size_t seed = 0;
         apply([&](const auto &... elems) {
