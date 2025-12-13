@@ -7,7 +7,7 @@ struct Fenwick {
     explicit Fenwick(int n_) : n(n_), bit(n_, T{}) {}
 
     // build from a vector, optimized build - O(n)
-    explicit Fenwick(const vector<T>& a) : n((int)a.size()), bit(a) {
+    explicit Fenwick(const vector<T>& a) : n(int(a.size()), bit(a) {
         for (int i = 0; i < n; i++) {
             int r = i | (i + 1);
             if (r < n) bit[r] += bit[i];

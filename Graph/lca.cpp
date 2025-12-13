@@ -4,8 +4,8 @@ struct tree {
     vector<vector<int>> up, adj;
 
     tree(const vector<vector<int>>& g) {
-        n = g.size();
-        l = __lg(n);
+        n = int(g.size());
+        l = bit_width(unsigned(n)) - 1;
         depth.assign(n, 0);
         up.assign(n, vector<int>(l + 1));
         adj = g;
