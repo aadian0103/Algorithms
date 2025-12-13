@@ -1,6 +1,5 @@
-// Suitable Operations: Min, Max, Gcd, Lcm, Bitwise AND, OR
-// Any associative, idempotent function
-// query result : f[l...r]
+// Suitable Operations: Min, Max, Gcd, Lcm, Bitwise AND, OR, (Any Idempotent Operations)
+// query result : f[l...r)
 template <typename T, typename F>
 struct SparseTable {
     int n;
@@ -20,15 +19,8 @@ struct SparseTable {
     }
 
     T query(int l, int r) const {
-        assert(0 <= l && l <= r && r < n);
-        int lg = bit_width(unsigned(r - l + 1)) - 1;
-        return func(table[lg][l], table[lg][r - (1 << lg) + 1]);
+        assert(0 <= l && l <= r && r <= n);
+        int lg = bit_width(unsigned(r - l)) - 1;
+        return func(table[lg][l], table[lg][r - (1 << lg)]);
     }
 };
-
-// use from here
-auto f = [](auto x, auto y) { return min(x, y); };
-auto f = [](auto x, auto y) { return max(x, y); };
-auto f = [](auto x, auto y) { return gcd(x, y); };
-auto f = [](auto x, auto y) { return x & y; };
-auto f = [](auto x, auto y) { return x | y; };
