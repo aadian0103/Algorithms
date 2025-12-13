@@ -1,3 +1,4 @@
+// sum -> prefix sum on [0, x), rangeSum -> sum on [l, r)
 template <typename T>
 struct Fenwick {
     int n;
@@ -6,8 +7,7 @@ struct Fenwick {
     constexpr Fenwick() noexcept : n(0) {}
     explicit Fenwick(int n_) : n(n_), bit(n_, T{}) {}
 
-    // build from a vector, optimized build - O(n)
-    explicit Fenwick(const vector<T>& a) : n(int(a.size()), bit(a) {
+    explicit Fenwick(const vector<T>& a) : n(int(a.size())), bit(a) {
         for (int i = 0; i < n; i++) {
             int r = i | (i + 1);
             if (r < n) bit[r] += bit[i];
@@ -21,7 +21,6 @@ struct Fenwick {
         }
     }
 
-    // gives prefix sum on [0, x)
     inline T sum(int x) const {
         assert(0 <= x && x <= n);
         auto ans = T();
@@ -31,32 +30,25 @@ struct Fenwick {
         return ans;
     }
 
-    // gives sum on [l, r)
     inline T rangeSum(int l, int r) const {
         assert(0 <= l && l < r && r <= n);
         return sum(r) - sum(l);
     }
 
-    // Returns largest x such that sum[0, x) <= k
-    int maxPrefix(T k) const {
-        if (n == 0) return 0;
-
+    int maxPref(T k) {
         int x = 0;
-        T sum = T();
-        for (int i = 1 << __lg(n); i > 0; i >>= 1) {
-            if (x + i <= n) {
-                T new_sum = sum + bit[x + i - 1];
-                if (new_sum <= k) {
-                    sum = new_sum;
-                    x += i;
-                }
+        for (int i = bit_floor(unsigned(n)); i > 0; i /= 2) {
+            if (x + i <= n && k >= bit[x + i - 1]) {
+                x += i;
+                k -= bit[x - 1];
             }
         }
         return x;
     }
 };
 
-// Range add, range sum
+// Range add -> add v to [l, r)
+// prefixSum -> sum on [0, x), rangeSum -> [l, r)
 template <class T>
 struct RURQ {
     int n;
@@ -66,12 +58,11 @@ struct RURQ {
 
     explicit RURQ(const vector<T>& a) : n((int)a.size()), f1((int)a.size()), f2((int)a.size()) {
         for (int i = 0; i < n; i++) {
-            range_add(i, i + 1, a[i]);
+            rangeAdd(i, i + 1, a[i]);
         }
     }
 
-    // add v to [l, r)
-    inline void range_add(int l, int r, T v) {
+    inline void rangeAdd(int l, int r, T v) {
         assert(0 <= l && l < r && r <= n);
         f1.add(l, v);
         if (r < n) f1.add(r, -v);
@@ -79,16 +70,14 @@ struct RURQ {
         if (r < n) f2.add(r, -v * (r - 1));
     }
 
-    // prefix sum [0, x)
-    inline T prefix_sum(int x) const {
+    inline T prefixSum(int x) const {
         assert(0 <= x && x <= n);
         return f1.sum(x) * (x - 1) - f2.sum(x);
     }
 
-    // sum on [l, r)
-    inline T range_query(int l, int r) const {
+    inline T RangeSum(int l, int r) const {
         assert(0 <= l && l < r && r <= n);
-        return prefix_sum(r) - prefix_sum(l);
+        return prefixSum(r) - prefixSum(l);
     }
 };
 
