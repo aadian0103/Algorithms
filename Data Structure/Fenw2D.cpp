@@ -2,19 +2,12 @@ template <typename T>
 class Fenwick2D {
 public:
     int n, m;
-    vector<vector<T>> a;
+    vector<vector<T>> bit;
 
-    Fenwick2D(int n = 0, int m = 0) {
-        init(n, m);
-    }
+    constexpr Fenwick2D() noexcept : n(0), m(0) {}
+    explicit Fenwick2D(int n, int m) : n(n), m(m), bit(n, vector<T>(m, T{})) {}
 
-    void init(int n_, int m_) {
-        n = n_;
-        m = m_;
-        a.assign(n, vector<T>(m, T()));
-    }
-
-    Fenwick2D(const vector<vector<T>>& b) : Fenwick2D(static_cast<int>(b.size()), b.empty() ? 0 : static_cast<int>(b[0].size()))  {
+    Fenwick2D(const vector<vector<T>>& b) : Fenwick2D(int(b.size()), b.empty() ? 0 : int(b[0].size()))  {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 add(i, j, b[i][j]);

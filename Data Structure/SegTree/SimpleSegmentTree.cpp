@@ -1,67 +1,80 @@
-// builds segment trees [l, r)
-// Supports queries over any interval [tl, tr)
-template<class Info>
-class SimpleSegmentTree {
-public:
+template<typename Info>
+struct SimpleSegmentTree {
     int n;
-    vector<Info> segTree;
+    vector<Info> seg;
 
     SimpleSegmentTree() : n(0) {}
-    SimpleSegmentTree(int size, Info v = Info()) {
-        this->n = size;
-        segTree.assign(4 << __lg(n), Info());
-    }
-    template <typename T>
-    SimpleSegmentTree(const vector<T> &a) {
-        this->n = (int)a.size();
-        segTree.assign(4 << __lg(n), Info());
+    SimpleSegmentTree(int n_, Info v_ = Info()) { SimpleSegmentTree(vector(n_, v_)); }
+
+    template<typename T>
+    SimpleSegmentTree(const vector<T>& a) : n(int(a.size())) {
+        int lg = bit_width(unsigned(n)) - 1;
+        seg.resize(4 << lg);
         build(1, 0, n, a);
     }
 
-    template <typename T>
-    void build(int v, int l, int r, const vector<T> &a) {
+    template<typename T>
+    void build(int v, int l, int r, const vector<T>& a) {
         if (r - l == 1) {
-            segTree[v] = a[l];
+            seg[v] = Info(a[l]);
             return;
         }
-        else {
-            int m = (l + r) / 2;
-            build(2 * v, l, m, a);
-            build(2 * v + 1, m, r, a);
-            segTree[v] = segTree[2 * v] + segTree[2 * v + 1];
-        }
+        int m = (l + r) >> 1;
+        build(v << 1, l, m, a);
+        build(v << 1 | 1, m, r, a);
+        seg[v] = seg[v << 1] + seg[v << 1 | 1];
     }
 
-    void update(int pos, const Info &value, int v = 1, int l = -1, int r = -1) {
-        if (l == -1 && r == -1) { l = 0; r = n; }
-        assert(pos >= 0);
-        if (r - l == 1) segTree[v] = value;
-        else {
-            int m = (l + r) / 2;
-            if (pos < m) update(pos, value, 2 * v, l, m);
-            else update(pos, value, 2 * v + 1, m, r);
-            segTree[v] = segTree[2 * v] + segTree[2 * v + 1];
+    void update(int v, int l, int r, int p, const Info& x) {
+        if (r - l == 1) {
+            seg[v] = x;
+            return;
         }
+        int m = (l + r) >> 1;
+        if (p < m) update(v << 1, l, m, p, x);
+        else update(v << 1 | 1, m, r, p, x);
+        seg[v] = seg[v << 1] + seg[v << 1 | 1];
+    }
+    void update(int p, const Info& x) {
+        assert(0 <= p && p < n);
+        update(1, 0, n, p, x);
     }
 
-    Info query(int tl, int tr, int v = 1, int l = -1, int r = -1) {
-        if (l == -1 && r == -1) { l = 0; r = n; }
-        assert(tl >= 0 && tl <= tr && tr <= n);
-        if (l >= tr || r <= tl) return Info();
-        if (l >= tl && r <= tr) return segTree[v];
-        int m = (l + r) / 2;
-        return query(tl, tr, 2 * v, l, m) + query(tl, tr, 2 * v + 1, m, r);
+    Info query(int v, int l, int r, int x, int y) {
+        if (l >= y || r <= x) {
+            return Info();
+        }
+        if (l >= x && r <= y) {
+            return seg[v];
+        }
+        int m = (l + r) >> 1;
+        return query(v << 1, l, m, x, y) + query(v << 1 | 1, m, r, x, y);
+    }
+    Info query(int l, int r) {
+        assert(0 <= l && l <= r && r <= n);
+        return query(1, 0, n, l, r);
     }
 };
 
 struct Info {
-    ll sum = 0;
-    int cnt = 0;
+    int mx;
+    int cnt;
+
+    // Info() must be identity element for operator+
+    Info() : mx(INT_MIN), cnt(0) {}
+    Info(int x) : mx(x), cnt(1) {}
 };
 
-Info operator+(Info a, Info b) {
+Info operator+(const Info& a, const Info& b) {
     Info c;
-    c.sum = a.sum + b.sum;
-    c.cnt = a.cnt + b.cnt;
+    if (a.mx > b.mx) {
+        c = a;
+    } else if (a.mx < b.mx) {
+        c = b;
+    } else {
+        c.mx = a.mx;
+        c.cnt = a.cnt + b.cnt;
+    }
     return c;
 }
+

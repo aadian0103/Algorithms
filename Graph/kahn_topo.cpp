@@ -1,5 +1,4 @@
-// kahn's algorithm to find the topological order of DAG for any random order
-// to find lex smallest replace queue with priority queue (priority_queue<int, vector<int>, greater<int>>)
+// Lex Smallest -> Priority queue (priority_queue<int, vector<int>, greater<int>>)
 queue<int> pq;
 vector<int> res;
 for (int i = 0; i < n; i++) {
@@ -7,6 +6,7 @@ for (int i = 0; i < n; i++) {
         pq.push(i);
     }
 }
+
 while (!pq.empty()) {
     int u = pq.front(); pq.pop();
     res.pb(u);
@@ -16,6 +16,7 @@ while (!pq.empty()) {
         }
     }
 }
-if ((int) res.size() < n) {
+
+if (int(res.size()) < n) {
     cout << "NOT A DAG" << nl;
 }

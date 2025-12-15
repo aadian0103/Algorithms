@@ -1,4 +1,3 @@
-// kosaraju algorithm to find the scc in a directed graph
 // The SCCs are labeled in topological order, i.e., for any edge u -> v, c[u] ≤ c[v].
 vector<vector<int>> rev(n);
 for (int u = 0; u < n; u++) {
@@ -26,7 +25,7 @@ for (int i = 0; i < n; i++) {
 }
 
 int cnt = 0; // this gives the no of strongly connected components
-vector<int> c(n, -1); // // c[i] = component id of node i
+vector<int> c(n, -1); // c[i] = component id of node i
 auto dfs2 = [&](this auto dfs2, int u) -> void {
     for (auto v : rev[u]) {
         if (c[v] == -1) {

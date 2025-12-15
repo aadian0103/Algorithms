@@ -1,11 +1,11 @@
 template<typename T>
-struct dsu {
+struct Dsu {
     unordered_map<T, T> parent;
     unordered_map<T, int> sz;
     int comps = 0;
 
-    dsu() = default;
-    dsu(const vector<T>& a) {
+    Dsu() = default;
+    Dsu(const vector<T>& a) {
         for (const auto& x : a) {
             add(x);
         }

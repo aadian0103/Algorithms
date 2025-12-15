@@ -1,6 +1,6 @@
 #include <ext/pb_ds/assoc_container.hpp>
 
-struct chash {
+struct Chash {
     static inline uint64_t splitmix64(uint64_t x) {
         // http://xorshift.di.unimi.it/splitmix64.c
         x += 0x9e3779b97f4a7c15ULL;
