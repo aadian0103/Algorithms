@@ -43,11 +43,14 @@ void solve(){
 
     if (brute_ans != ans){
         cout << n << nl;
+
         for (int i = 0; i < n; i++) {
             cout << a[i] << " ";
         }
+
         cout << nl;
         cout << brute_ans << " " << ans << nl;
+
         exit(0);
     }
 }
@@ -55,9 +58,13 @@ void solve(){
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
+
     int t = 1;
     cin >> t;
+
     while (t--) {
         solve();
     }
+
+    return 0;
 }

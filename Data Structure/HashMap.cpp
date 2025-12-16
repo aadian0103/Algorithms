@@ -30,8 +30,8 @@ struct Chash {
     }
 };
 
-template <typename K, typename V, typename Hash = chash>
+template <typename K, typename V, typename Hash = Chash>
 using HashMap = __gnu_pbds::gp_hash_table<K, V, Hash>;
 
-template <typename K, typename Hash = chash>
+template <typename K, typename Hash = Chash>
 using HashSet = HashMap<K, __gnu_pbds::null_type, Hash>;
