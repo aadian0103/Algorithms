@@ -1,4 +1,5 @@
 vector<int> phi;
+
 void phiN(int n) {
     phi.assign(n + 1);
     ranges::iota(phi, 0);

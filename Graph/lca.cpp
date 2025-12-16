@@ -67,7 +67,7 @@ struct Tree {
             return v;
         }
 
-        for (int i = lg; i >= 0; --i) {
+        for (int i = lg; i >= 0; i--) {
             if (!isAncestor(up[u][i], v)) {
                 u = up[u][i];
             }
