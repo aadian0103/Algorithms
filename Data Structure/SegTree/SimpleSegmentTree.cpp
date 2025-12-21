@@ -4,7 +4,7 @@ struct SimpleSegmentTree {
     vector<Info> seg;
 
     SimpleSegmentTree() : n(0) {}
-    SimpleSegmentTree(int n_, Info v_ = Info()) { SimpleSegmentTree(vector(n_, v_)); }
+    SimpleSegmentTree(int n_, Info v_ = Info()) { SimpleSegmentTree(vector<Info>(n_, v_)); }
 
     template<typename T>
     SimpleSegmentTree(const vector<T>& a) : n(int(a.size())) {
@@ -19,10 +19,10 @@ struct SimpleSegmentTree {
             seg[v] = Info(a[l]);
             return;
         }
-        int m = (l + r) >> 1;
-        build(v << 1, l, m, a);
-        build(v << 1 | 1, m, r, a);
-        seg[v] = seg[v << 1] + seg[v << 1 | 1];
+        int m = (l + r) / 2;
+        build(2 * v, l, m, a);
+        build(2 * v + 1, m, r, a);
+        seg[v] = seg[2 * v] + seg[2 * v + 1];
     }
 
     void update(int v, int l, int r, int p, const Info& x) {
@@ -30,10 +30,10 @@ struct SimpleSegmentTree {
             seg[v] = x;
             return;
         }
-        int m = (l + r) >> 1;
-        if (p < m) update(v << 1, l, m, p, x);
-        else update(v << 1 | 1, m, r, p, x);
-        seg[v] = seg[v << 1] + seg[v << 1 | 1];
+        int m = (l + r) / 2;
+        if (p < m) update(2 * v, l, m, p, x);
+        else update(2 * v + 1, m, r, p, x);
+        seg[v] = seg[2 * v] + seg[2 * v + 1];
     }
     void update(int p, const Info& x) {
         assert(0 <= p && p < n);
@@ -47,8 +47,8 @@ struct SimpleSegmentTree {
         if (l >= x && r <= y) {
             return seg[v];
         }
-        int m = (l + r) >> 1;
-        return query(v << 1, l, m, x, y) + query(v << 1 | 1, m, r, x, y);
+        int m = (l + r) / 2;
+        return query(2 * v, l, m, x, y) + query(2 * v + 1, m, r, x, y);
     }
     Info query(int l, int r) {
         assert(0 <= l && l <= r && r <= n);

@@ -1,7 +1,13 @@
+/*
+  ~ AH
+*/
+
+#pragma GCC optimize("O3,unroll-loops")
+
 #include <bits/stdc++.h>
 using namespace std;
 
-#ifndef ONLINE_JUDGE
+#ifdef LOCAL
 #include "debug.cpp"
 #else
 #define debug(...)
@@ -28,4 +34,3 @@ int main() {
 
     return 0;
 }
-

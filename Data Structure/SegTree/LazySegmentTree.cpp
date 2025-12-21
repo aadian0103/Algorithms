@@ -6,7 +6,7 @@ struct LazySegmentTree {
     vector<Tag> tag;
 
     LazySegmentTree() : n(0) {}
-    LazySegmentTree(int n_, Info v_ = Info()) { LazySegmentTree(vector(n_, v_)); }
+    LazySegmentTree(int n_, Info v_ = Info()) { LazySegmentTree(vector<Info>(n_, v_)); }
 
     template<typename T>
     LazySegmentTree(const vector<T>& a) : n(int(a.size())) {
@@ -22,10 +22,10 @@ struct LazySegmentTree {
             seg[v] = Info(a[l]);
             return;
         }
-        int m = (l + r) >> 1;
-        build(v << 1, l, m, a);
-        build(v << 1 | 1, m, r, a);
-        seg[v] = seg[v << 1] + seg[v << 1 | 1];
+        int m = (l + r) / 2;
+        build(2 * v, l, m, a);
+        build(2 * v + 1, m, r, a);
+        seg[v] = seg[2 * v] + seg[2 * v + 1]; 
     }
 
     void apply(int p, const Tag &v) {

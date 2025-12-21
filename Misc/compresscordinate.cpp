@@ -1,6 +1,9 @@
 vector<int> c = a;
+
 ranges::sort(c);
-c.erase(unique(c.begin(), c.end()), c.end());
+
+c.erase(ranges::unique(c), c.end());
+
 for (int i = 0; i < n; i++) {
     a[i] = ranges::lower_bound(c, a[i]) - c.begin();
 }

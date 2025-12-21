@@ -5,7 +5,7 @@ struct Fenwick {
     vector<T> bit;
 
     constexpr Fenwick() noexcept : n(0) {}
-    explicit Fenwick(int n) : n(n), bit(n, T{}) {}
+    explicit Fenwick(int n_) : n(n_), bit(n_, T{}) {}
 
     explicit Fenwick(const vector<T>& a) : n(int(a.size())), bit(a) {
         for (int i = 0; i < n; i++) {
@@ -54,7 +54,7 @@ struct RURQ {
     int n;
     Fenwick<T> f1, f2;
 
-    explicit RURQ(int n) : n(n), f1(n), f2(n) {}
+    explicit RURQ(int n_) : n(n_), f1(n_), f2(n_) {}
 
     explicit RURQ(const vector<T>& a) : n(int(a.size())), f1(int(a.size())), f2(int(a.size())) {
         for (int i = 0; i < n; i++) {

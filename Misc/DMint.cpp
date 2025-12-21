@@ -26,15 +26,17 @@ public:
     Barrett(int32_t m_) : m(m_), im((int64_t)(-1) / m_ + 1) {}
  
     constexpr int32_t mod() const { return m; }
+
     constexpr int32_t mul(int32_t a, int32_t b) const {
         int64_t z = a;
         z *= b;
+
         int64_t x = int64_t((__int128_t(z) * im) >> 64);
-        
         int32_t v = int32_t(z - x * m);
         if (m <= v) {
             v += m;
         }
+
         return v;
     }
  
@@ -42,7 +44,6 @@ private:
     int32_t m;
     int64_t im;
 };
-
 
 template <typename T>
 class DMint {
@@ -64,7 +65,7 @@ public:
 
     const Type& operator()() const { return value; }
     template <typename U> explicit operator U() const { return static_cast<U>(value); }
-    constexpr static void setMod(int32_t m) { bt = m; }
+    static void setMod(int32_t m) { bt = m; }
     constexpr static Type mod() { return bt.mod(); }
 
     constexpr DMint operator-() const { return DMint(-value); }
