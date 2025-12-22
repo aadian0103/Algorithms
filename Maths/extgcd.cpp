@@ -48,5 +48,3 @@ bool diophantine(T a, T b, T c, T &x, T &y, T &g) {
     g = abs(g);
     return true;
 }
-
-

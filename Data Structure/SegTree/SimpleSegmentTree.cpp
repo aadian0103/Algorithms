@@ -3,11 +3,11 @@ struct SimpleSegmentTree {
     int n;
     vector<Info> seg;
 
-    SimpleSegmentTree() : n(0) {}
-    SimpleSegmentTree(int n_, Info v_ = Info()) { SimpleSegmentTree(vector<Info>(n_, v_)); }
+    explicit SimpleSegmentTree() : n(0) {}
+    explicit SimpleSegmentTree(int n_, Info v_ = Info()) { SimpleSegmentTree(vector<Info>(n_, v_)); }
 
     template<typename T>
-    SimpleSegmentTree(const vector<T>& a) : n(int(a.size())) {
+    explicit SimpleSegmentTree(const vector<T>& a) : n((int)a.size()) {
         int lg = bit_width(unsigned(n)) - 1;
         seg.resize(4 << lg);
         build(1, 0, n, a);
@@ -35,6 +35,7 @@ struct SimpleSegmentTree {
         else update(2 * v + 1, m, r, p, x);
         seg[v] = seg[2 * v] + seg[2 * v + 1];
     }
+
     void update(int p, const Info& x) {
         assert(0 <= p && p < n);
         update(1, 0, n, p, x);
@@ -50,6 +51,7 @@ struct SimpleSegmentTree {
         int m = (l + r) / 2;
         return query(2 * v, l, m, x, y) + query(2 * v + 1, m, r, x, y);
     }
+
     Info query(int l, int r) {
         assert(0 <= l && l <= r && r <= n);
         return query(1, 0, n, l, r);

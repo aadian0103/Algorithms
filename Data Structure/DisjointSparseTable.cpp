@@ -6,7 +6,7 @@ struct DisjointSparseTable {
     F func;
     vector<vector<T>> table;
 
-    DisjointSparseTable(const vector<T>& a, const F& f) : n(int(a.size())), func(f) {
+    DisjointSparseTable(const vector<T>& a, const F& f) : n((int)a.size()), func(f) {
         int lg = bit_width(unsigned(n));
         table.assign(lg, vector<T>(n));
         table[0] = a;

@@ -3,9 +3,9 @@ struct TwoSat {
     vector<vector<int>> adj;
     vector<bool> ans;
 
-    TwoSat(int n) : n(n), adj(2 * n), ans(n) {}
+    TwoSat(int n_) : n(n_), adj(2 * n_), ans(n_) {}
 
-    void addClause(int u, bool f, int v, bool g) {
+    void add_clause(int u, bool f, int v, bool g) {
         adj[2 * u + !f].push_back(2 * v + g);
         adj[2 * v + !g].push_back(2 * u + f);
     }

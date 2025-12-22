@@ -1,6 +1,6 @@
 template<typename T>
 struct Dsu {
-    unordered_map<T, T> parent;
+    unordered_map<T, T> par;
     unordered_map<T, int> sz;
     int comps = 0;
 
@@ -12,17 +12,17 @@ struct Dsu {
     }
 
     T add(const T& x) {
-        if (!parent.count(x)) {
-            parent[x] = x;
+        if (!par.count(x)) {
+            par[x] = x;
             sz[x] = 1;
             comps++;
         }
-        return parent[x];
+        return par[x];
     }
 
     T get(const T& x) {
-        if (!parent.count(x)) return add(x);
-        return parent[x] = (parent[x] == x ? x : get(parent[x]));
+        if (!par.count(x)) return add(x);
+        return par[x] = (par[x] == x ? x : get(par[x]));
     }
 
     bool unite(const T& a, const T& b) {
@@ -30,9 +30,10 @@ struct Dsu {
         if (ra == rb) return false;
 
         if (sz[ra] < sz[rb]) swap(ra, rb);
-        parent[rb] = ra;
+        par[rb] = ra;
         sz[ra] += sz[rb];
         comps--;
+
         return true;
     }
 

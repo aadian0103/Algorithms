@@ -8,4 +8,3 @@ T fdiv(T a, T b) {
     return a / b - ((a ^ b) < 0 && a % b);
 }
 
-

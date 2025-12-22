@@ -1,6 +1,6 @@
 vector<int> pr, lp;
 
-void Sieve(int n) {
+void sieve(int n) {
     lp.assign(n + 1, 0);
     pr.clear();
 
@@ -19,7 +19,7 @@ void Sieve(int n) {
     };
 }
 
-vector<pair<int, int>> Factors(int x) {
+vector<pair<int, int>> factors(int x) {
     vector<pair<int, int>> f;
     while (x > 1) {
         int p = lp[x], cnt = 0;

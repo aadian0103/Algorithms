@@ -1,27 +1,31 @@
 struct Dsu {
-    vector<int> parent, sz;
+    vector<int> par, sz;
     int comps;
 
-    Dsu(int n) : parent(n), sz(n, 1), comps(n) {
-        ranges::iota(parent, 0);
+    Dsu(int n) : par(n), sz(n, 1), comps(n) {
+        ranges::iota(par, 0);
     }
 
-    int get(int x) noexcept {
-        return parent[x] = (x == parent[x] ? x : get(parent[x]));
+    int get(int x) {
+        while (x != par[x]) {
+            x = par[x] = par[par[x]];
+        }
+        return x;
     }
 
-    bool unite(int a, int b) noexcept {
+    bool unite(int a, int b) {
         a = get(a); b = get(b);
         if (a == b) return false;
 
         if (sz[a] < sz[b]) swap(a, b);
-        parent[b] = a;
+        par[b] = a;
         sz[a] += sz[b];
         comps--;
+
         return true;
     }
 
-    int size(int x) noexcept { return sz[get(x)]; }
-    int count() const noexcept { return comps; }
-    bool same(int a, int b) noexcept { return get(a) == get(b); }
+    int size(int x) { return sz[get(x)]; }
+    int count() const { return comps; }
+    bool same(int a, int b) { return get(a) == get(b); }
 };

@@ -1,25 +1,25 @@
-vector<bool> sieve;
-vector<vector<int>> factors;
+vector<bool> pr;
+vector<vector<int>> f;
 
-void Sieve(int n) {
-    sieve.assign(n + 1, true);
+void sieve(int n) {
+    pr.assign(n + 1, true);
 
     for (int i = 2; i * i <= n; i++) {
-        if (sieve[i]) {
+        if (pr[i]) {
             for (int j = i * i; j <= N; j += i) {
-                sieve[j] = false;
+                pr[j] = false;
             }
         }
     }
 }
 
-void Factors(int n) {
-    factors.resize(n + 1);
+void factors(int n) {
+    f.resize(n + 1);
 
     for (int i = 2; i * i <= n; i++) {
-        if (factors[i].empty()) {
+        if (f[i].empty()) {
             for (int j = i; j <= n; j += i) {
-                factors[j].emplace_back(i);
+                f[j].emplace_back(i);
             }
         }
     }

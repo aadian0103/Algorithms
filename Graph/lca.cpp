@@ -3,14 +3,8 @@ struct Tree {
     vector<int> in, out, depth, sz;
     vector<vector<int>> up, adj;
 
-    explicit Tree(const vector<vector<int>>& g) : n(int(g.size())), adj(g) {
-        init();
-    }
-
-    explicit Tree(int n_) : n(n_) {
-        adj.resize(n_);
-        init();
-    }
+    explicit Tree(const vector<vector<int>>& g) : n((int)g.size()), adj(g) { init(); }
+    explicit Tree(int n_) : n(n_) { adj.resize(n_); init(); }
 
     void init() {
         lg = bit_width(unsigned(n - 1));
@@ -20,7 +14,7 @@ struct Tree {
         up.assign(n, vector<int>(lg + 1));
     }
 
-    inline void add(int u, int v) {
+    void add(int u, int v) {
         adj[u].emplace_back(v);
         adj[v].emplace_back(u);
     }
@@ -45,11 +39,11 @@ struct Tree {
         out[u] = ++time;
     }
 
-    inline bool isAncestor(int u, int v) const {
+    bool is_ancestor(int u, int v) const {
         return in[u] <= in[v] && out[u] >= out[v];
     }
 
-    inline int kth(int u, int k) const {
+    int kth(int u, int k) const {
         for (int i = lg; i >= 0; i--) {
             if (k & (1 << i)) {
                 u = up[u][i];
@@ -59,16 +53,16 @@ struct Tree {
         return u;
     }
 
-    inline int lca(int u, int v) const {
-        if (isAncestor(u, v)) {
+    int lca(int u, int v) const {
+        if (is_ancestor(u, v)) {
             return u;
         }
-        if (isAncestor(v, u)) {
+        if (is_ancestor(v, u)) {
             return v;
         }
 
         for (int i = lg; i >= 0; i--) {
-            if (!isAncestor(up[u][i], v)) {
+            if (!is_ancestor(up[u][i], v)) {
                 u = up[u][i];
             }
         }
@@ -76,7 +70,7 @@ struct Tree {
         return up[u][0];
     }
 
-    inline int dist(int u, int v) const {
+    int dist(int u, int v) const {
         return depth[u] + depth[v] - 2 * depth[lca(u, v)];
     }
 };

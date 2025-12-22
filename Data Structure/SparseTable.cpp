@@ -6,7 +6,7 @@ struct SparseTable {
     F func;
     vector<vector<T>> table;
 
-    SparseTable(const vector<T>& a, const F& f) : n(int(a.size())), func(f) {
+    SparseTable(const vector<T>& a, const F& f) : n((int)a.size()), func(f) {
         int lg = bit_width(unsigned(n));
         table.resize(lg);
         table[0] = a;
