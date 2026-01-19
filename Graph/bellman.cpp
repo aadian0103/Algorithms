@@ -1,6 +1,7 @@
 vector<ll> dist(n, inf);
 vector<int> p(n, -1);
 dist[start] = 0;
+
 for (int i = 0; i < n - 1; i++) {
     bool flag = 0;
     for (int u = 0; u < n; u++) {

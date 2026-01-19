@@ -1,5 +1,5 @@
 template <typename T>
-T extgcd(T a, T b, T &x, T &y) {
+T extgcd(T a, T b, T& x, T& y) {
     x = 1, y = 0;
     T x1 = 0, y1 = 1, a1 = a, b1 = b;
     while (b1) {
@@ -12,7 +12,7 @@ T extgcd(T a, T b, T &x, T &y) {
 }
 
 template <typename T>
-bool diophantine(T a, T b, T c, T &x, T &y, T &g) {
+bool diophantine(T a, T b, T c, T& x, T& y, T &g) {
     if (a == 0 && b == 0) {
         if (c == 0) {
             x = y = g = 0;

@@ -1,15 +1,4 @@
 template <typename T>
-constexpr T power(T a, int64_t b, T res = 1) {
-    assert(b >= 0);
-    for (; b != 0; b /= 2, a *= a) {
-        if (b & 1) {
-            res *= a;
-        }
-    }
-    return res;
-}
-
-template <typename T>
 constexpr T inverse(T a, T m) {
     T u = 0, v = 1;
     while (a != 0) {
@@ -21,13 +10,13 @@ constexpr T inverse(T a, T m) {
     return u;
 }
 
-template<int32_t P>
-constexpr int32_t mulMod(int32_t a, int32_t b) {
+template <int32_t P>
+constexpr int32_t mul_mod(int32_t a, int32_t b) {
     return (int32_t)(int64_t(a) * b % P);
 }
 
-template<int64_t P>
-constexpr int64_t mulMod(int64_t a, int64_t b) {
+template <int64_t P>
+constexpr int64_t mul_mod(int64_t a, int64_t b) {
     return (int64_t)(__int128_t(a) * b % P);
 }
 
@@ -64,7 +53,7 @@ public:
     template <typename U> Mint& operator+=(const U& other) { return *this += Mint(other); }
     template <typename U> Mint& operator-=(const U& other) { return *this -= Mint(other); }
 
-    constexpr Mint& operator*=(const Mint& other) { value = normalize(mulMod<mod()>(value, other.value)); return *this; }
+    constexpr Mint& operator*=(const Mint& other) { value = normalize(mul_mod<mod()>(value, other.value)); return *this; }
     constexpr Mint& operator/=(const Mint& other) { return *this *= Mint(inverse(other.value, mod())); }
 
     friend constexpr bool operator==(const Mint& lhs, const Mint& rhs) { return lhs.value == rhs.value; }
@@ -107,27 +96,37 @@ private:
 };
 
 template <typename T>
+constexpr Mint<T> power(Mint<T> a, int64_t b) {
+    assert(b >= 0);
+    Mint<T> res = 1;
+    for (; b != 0; b /= 2, a *= a) {
+        if (b & 1) {
+            res *= a;
+        }
+    }
+    return res;
+}
+
+template <typename T>
 string to_string(const Mint<T>& number) {
     return to_string(number());
 }
 
-template<int32_t T> using StaticMint32 = Mint<integral_constant<int32_t, T>>;
-template<int64_t T> using StaticMint64 = Mint<integral_constant<int64_t, T>>;
+template<int32_t T> using static_mint32 = Mint<integral_constant<int32_t, T>>;
+template<int64_t T> using static_mint64 = Mint<integral_constant<int64_t, T>>;
 
-using mint = StaticMint32<1000000007>;
-using mint2 = StaticMint32<998244353>;
-using mint3 = StaticMint32<1000000009>;
-using big_mint = StaticMint64<1000000000000000003ULL>;
+using mint = static_mint32<1000000007>;
+using mint2 = static_mint32<998244353>;
+using big_mint = static_mint64<1000000000000000003ULL>;
 
-vector<mint> fact(1, 1);
-vector<mint> inv_fact(1, 1);
+vector<mint> fact(1, 1), inv_fact(1, 1);
 
 mint C(int n, int k) {
     if (k < 0 || k > n) {
         return 0;
     }
-    while ((int) fact.size() < n + 1) {
-        fact.push_back(fact.back() * (int) fact.size());
+    while ((int)fact.size() < n + 1) {
+        fact.push_back(fact.back() * (int)fact.size());
         inv_fact.push_back(1 / fact.back());
     }
     return fact[n] * inv_fact[k] * inv_fact[n - k];

@@ -1,6 +1,6 @@
-vector<int> EulerianPath(int n, vector<pair<int, int>>& edges) {
+vector<int> EulerianPath(int n, vector<pair<int, int>> &edges) {
     vector<vector<pair<int, int>>> adj(n);
-    vector<int> indeg(n), outdeg(n), used(edges.size());
+    vector<int> indeg(n), outdeg(n), used((int)edges.size());
 
     for (int i = 0; i < (int)edges.size(); i++) {
         auto [u, v] = edges[i];
@@ -48,6 +48,6 @@ vector<int> EulerianPath(int n, vector<pair<int, int>>& edges) {
         }
     }
 
-    reverse(path.begin(), path.end());
-    return (path.size() == edges.size() + 1 ? path : {});
+    ranges::reverse(path);
+    return ((int)path.size() == (int)edges.size() + 1 ? path : {});
 }

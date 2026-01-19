@@ -1,8 +1,8 @@
-struct Dsu {
+struct DSU {
     vector<int> par, sz;
     int comps;
 
-    Dsu(int n) : par(n), sz(n, 1), comps(n) {
+    DSU(int n) : par(n), sz(n, 1), comps(n) {
         ranges::iota(par, 0);
     }
 

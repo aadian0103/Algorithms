@@ -1,82 +1,124 @@
-template<typename Info>
-struct SimpleSegmentTree {
+template <typename Info>
+struct SegmentTree {
     int n;
-    vector<Info> seg;
+    vector<Info> info;
 
-    explicit SimpleSegmentTree() : n(0) {}
-    explicit SimpleSegmentTree(int n_, Info v_ = Info()) { SimpleSegmentTree(vector<Info>(n_, v_)); }
+    explicit SegmentTree() : n(0) {}
+    explicit SegmentTree(int n_, Info v_ = Info()) : SegmentTree(vector<Info>(n_, v_)) {}
 
     template<typename T>
-    explicit SimpleSegmentTree(const vector<T>& a) : n((int)a.size()) {
+    explicit SegmentTree(const vector<T>& a) : n((int)a.size()) {
         int lg = bit_width(unsigned(n)) - 1;
-        seg.resize(4 << lg);
+        info.resize(4 << lg);
         build(1, 0, n, a);
     }
 
     template<typename T>
-    void build(int v, int l, int r, const vector<T>& a) {
+    void build(int p, int l, int r, const vector<T>& a) {
         if (r - l == 1) {
-            seg[v] = Info(a[l]);
+            info[p] = a[l];
             return;
         }
         int m = (l + r) / 2;
-        build(2 * v, l, m, a);
-        build(2 * v + 1, m, r, a);
-        seg[v] = seg[2 * v] + seg[2 * v + 1];
+        build(2 * p, l, m, a);
+        build(2 * p + 1, m, r, a);
+        info[p] = info[2 * p] + info[2 * p + 1];
     }
 
-    void update(int v, int l, int r, int p, const Info& x) {
+    void update(int p, int l, int r, int x, const Info& v) {
         if (r - l == 1) {
-            seg[v] = x;
+            info[p] = v;
             return;
         }
         int m = (l + r) / 2;
-        if (p < m) update(2 * v, l, m, p, x);
-        else update(2 * v + 1, m, r, p, x);
-        seg[v] = seg[2 * v] + seg[2 * v + 1];
+        if (x < m) {
+            update(2 * p, l, m, x, v);
+        } else {
+            update(2 * p + 1, m, r, x, v);
+        }
+        info[p] = info[2 * p] + info[2 * p + 1];
     }
 
-    void update(int p, const Info& x) {
-        assert(0 <= p && p < n);
-        update(1, 0, n, p, x);
+    void update(int x, const Info& v) {
+        assert(0 <= x && x < n);
+        update(1, 0, n, x, v);
     }
 
-    Info query(int v, int l, int r, int x, int y) {
+    Info query(int p, int l, int r, int x, int y) {
         if (l >= y || r <= x) {
             return Info();
         }
         if (l >= x && r <= y) {
-            return seg[v];
+            return info[p];
         }
         int m = (l + r) / 2;
-        return query(2 * v, l, m, x, y) + query(2 * v + 1, m, r, x, y);
+        return query(2 * p, l, m, x, y) + query(2 * p + 1, m, r, x, y);
     }
 
     Info query(int l, int r) {
         assert(0 <= l && l <= r && r <= n);
         return query(1, 0, n, l, r);
     }
+
+    template <typename F>
+    int find_first(int p, int l, int r, int x, int y, F pred) {
+        if (l >= y || r <= x || !pred(info[p])) {
+            return -1;
+        }
+        if (r - l == 1) {
+            return l;
+        }
+        int m = (l + r) / 2;
+        int res = find_first(2 * p, l, m, x, y, pred);
+        if (res == -1) {
+            res = find_first(2 * p + 1, m, r, x, y, pred);
+        }
+        return res;
+    }
+
+    template <typename F>
+    int find_first(int l, int r, F pred) {
+        assert(0 <= l && l <= r && r <= n);
+        return find_first(1, 0, n, l, r, pred);
+    }
+
+    template <typename F>
+    int find_last(int p, int l, int r, int x, int y, F pred) {
+        if (l >= y || r <= x || !pred(info[p])) {
+            return -1;
+        }
+        if (r - l == 1) {
+            return l;
+        }
+        int m = (l + r) / 2;
+        int res = find_last(2 * p + 1, m, r, x, y, pred);
+        if (res == -1) {
+            res = find_last(2 * p, l, m, x, y, pred);
+        }
+        return res;
+    }
+
+    template <typename F>
+    int find_last(int l, int r, F pred) {
+        assert(0 <= l && l <= r && r <= n);
+        return find_last(1, 0, n, l, r, pred);
+    }
 };
 
+constexpr ll inf = 9e18;
 struct Info {
-    int mx;
-    int cnt;
+    ll mx, pref, suff, sum;
 
-    // Info() must be identity element for operator+
-    Info() : mx(INT_MIN), cnt(0) {}
-    Info(int x) : mx(x), cnt(1) {}
+    Info() : mx(-inf), pref(-inf), suff(-inf), sum(0) {}
+    Info(int x) : mx(x), pref(x), suff(x), sum(x) {}
 };
 
 Info operator+(const Info& a, const Info& b) {
     Info c;
-    if (a.mx > b.mx) {
-        c = a;
-    } else if (a.mx < b.mx) {
-        c = b;
-    } else {
-        c.mx = a.mx;
-        c.cnt = a.cnt + b.cnt;
-    }
+    c.mx = max({a.mx, b.mx, a.suff + b.pref});
+    c.pref = max(a.pref, a.sum + b.pref);
+    c.suff = max(b.suff, b.sum + a.suff);
+    c.sum = a.sum + b.sum;
     return c;
 }
 

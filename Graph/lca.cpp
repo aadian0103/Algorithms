@@ -3,7 +3,7 @@ struct Tree {
     vector<int> in, out, depth, sz;
     vector<vector<int>> up, adj;
 
-    explicit Tree(const vector<vector<int>>& g) : n((int)g.size()), adj(g) { init(); }
+    explicit Tree(const vector<vector<int>> &g) : n((int)g.size()), adj(g) { init(); }
     explicit Tree(int n_) : n(n_) { adj.resize(n_); init(); }
 
     void init() {
@@ -15,19 +15,17 @@ struct Tree {
     }
 
     void add(int u, int v) {
-        adj[u].emplace_back(v);
-        adj[v].emplace_back(u);
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
     // remember to call t.dfs(root, root)
     void dfs(int u, int p) {
         in[u] = ++time;
-
         up[u][0] = p;
         for (int i = 1; i <= lg; i++) {
             up[u][i] = up[up[u][i - 1]][i - 1];
         }
-
         for (auto v : adj[u]) {
             if (v != p) {
                 depth[v] = depth[u] + 1;
@@ -35,7 +33,6 @@ struct Tree {
                 sz[u] += sz[v];
             };
         }
-
         out[u] = ++time;
     }
 
@@ -49,24 +46,17 @@ struct Tree {
                 u = up[u][i];
             }
         }
-
         return u;
     }
 
     int lca(int u, int v) const {
-        if (is_ancestor(u, v)) {
-            return u;
-        }
-        if (is_ancestor(v, u)) {
-            return v;
-        }
-
+        if (is_ancestor(u, v)) return u;
+        if (is_ancestor(v, u)) return v;
         for (int i = lg; i >= 0; i--) {
             if (!is_ancestor(up[u][i], v)) {
                 u = up[u][i];
             }
         }
-
         return up[u][0];
     }
 

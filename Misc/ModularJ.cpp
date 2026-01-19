@@ -1,3 +1,10 @@
+using i64 = long long;
+using u64 = unsigned long long;
+using u32 = unsigned;
+ 
+using u128 = unsigned __int128;
+using i128 = __int128;
+ 
 template<class T>
 constexpr T power(T a, u64 b, T res = 1) {
     for (; b != 0; b /= 2, a *= a) {
@@ -9,12 +16,12 @@ constexpr T power(T a, u64 b, T res = 1) {
 }
  
 template<u32 P>
-constexpr u32 mulMod(u32 a, u32 b) {
+constexpr u32 mul_mod(u32 a, u32 b) {
     return u64(a) * b % P;
 }
  
 template<u64 P>
-constexpr u64 mulMod(u64 a, u64 b) {
+constexpr u64 mul_mod(u64 a, u64 b) {
     u64 res = a * b - u64(1.L * a * b / P - 0.5L) * P;
     res %= P;
     return res;
@@ -84,11 +91,13 @@ public:
     }
     
     constexpr ModIntBase inv() const {
-        return power(*this, mod() - 2);
+        auto v = invGcd(x, mod());
+        assert(v.first == 1);
+        return v.second;
     }
     
     constexpr ModIntBase &operator*=(const ModIntBase &rhs) & {
-        x = mulMod<mod()>(x, rhs.val());
+        x = mul_mod<mod()>(x, rhs.val());
         return *this;
     }
     constexpr ModIntBase &operator+=(const ModIntBase &rhs) & {
@@ -126,13 +135,13 @@ public:
         return lhs;
     }
     
-    friend constexpr std::istream &operator>>(std::istream &is, ModIntBase &a) {
+    friend constexpr std::istream &operator>>(std::istream &is, ModIntBase& a) {
         i64 i;
         is >> i;
         a = i;
         return is;
     }
-    friend constexpr std::ostream &operator<<(std::ostream &os, const ModIntBase &a) {
+    friend constexpr std::ostream &operator<<(std::ostream &os, const ModIntBase& a) {
         return os << a.val();
     }
     
@@ -256,13 +265,13 @@ public:
         return lhs;
     }
     
-    friend constexpr std::istream &operator>>(std::istream &is, DynModInt &a) {
+    friend constexpr std::istream &operator>>(std::istream &is, DynModInt& a) {
         i64 i;
         is >> i;
         a = i;
         return is;
     }
-    friend constexpr std::ostream &operator<<(std::ostream &os, const DynModInt &a) {
+    friend constexpr std::ostream &operator<<(std::ostream &os, const DynModInt& a) {
         return os << a.val();
     }
     
@@ -277,3 +286,54 @@ private:
     u32 x;
     static Barrett bt;
 };
+ 
+template<u32 Id>
+Barrett DynModInt<Id>::bt = 998244353;
+ 
+using Z = ModInt<998244353>;
+ 
+struct Comb {
+    int n;
+    std::vector<Z> _fac;
+    std::vector<Z> _invfac;
+    std::vector<Z> _inv;
+    
+    Comb() : n{0}, _fac{1}, _invfac{1}, _inv{0} {}
+    Comb(int n) : Comb() {
+        init(n);
+    }
+    
+    void init(int m) {
+        if (m <= n) return;
+        _fac.resize(m + 1);
+        _invfac.resize(m + 1);
+        _inv.resize(m + 1);
+        
+        for (int i = n + 1; i <= m; i++) {
+            _fac[i] = _fac[i - 1] * i;
+        }
+        _invfac[m] = _fac[m].inv();
+        for (int i = m; i > n; i--) {
+            _invfac[i - 1] = _invfac[i] * i;
+            _inv[i] = _invfac[i] * _fac[i - 1];
+        }
+        n = m;
+    }
+    
+    Z fac(int m) {
+        if (m > n) init(2 * m);
+        return _fac[m];
+    }
+    Z invfac(int m) {
+        if (m > n) init(2 * m);
+        return _invfac[m];
+    }
+    Z inv(int m) {
+        if (m > n) init(2 * m);
+        return _inv[m];
+    }
+    Z binom(int n, int m) {
+        if (n < m || m < 0) return 0;
+        return fac(n) * invfac(m) * invfac(n - m);
+    }
+} comb;

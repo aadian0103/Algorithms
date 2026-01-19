@@ -1,13 +1,15 @@
-ranges::sort(edges, [&](auto a, auto b) { return edges[a][2] < edges[b][2]; });
-vector<int> used;
+vector<int> order(m);
+ranges::iota(order, 0);
+ranges::sort(order, [&](auto a, auto b) { edges[a][2] < edges[b][2]; });
 
 dsu d(n);
 ll ans = 0;
-for (auto e : edges) {
-    int u = e[0], v = e[1], w = e[2];
+vector<int> used;
+for (auto id : order) {
+    int u = edges[id][0], v = edges[id][1], w = edges[id][2];
     if (d.unite(u, v)) {
         ans += w;
-        used.emplace_back(i);
-        if (int(used.size()) == n - 1) break;
+        used.push_back(id);
+        if ((int)used.size() == n - 1) break;
     }
 }

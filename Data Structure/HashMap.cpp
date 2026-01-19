@@ -21,7 +21,7 @@ struct Chash {
     }
 
     template <typename... Ts>
-    size_t operator()(const tuple<Ts...> &t) const noexcept {
+    size_t operator()(const tuple<Ts...>& t) const noexcept {
         size_t seed = 0;
         apply([&](const auto &... elems) {
             ((seed = (seed * 1315423911u) ^ (*this)(elems) ), ...);
@@ -31,7 +31,7 @@ struct Chash {
 };
 
 template <typename K, typename V, typename Hash = Chash>
-using HashMap = __gnu_pbds::gp_hash_table<K, V, Hash>;
+using hash_map = __gnu_pbds::gp_hash_table<K, V, Hash>;
 
 template <typename K, typename Hash = Chash>
-using HashSet = HashMap<K, __gnu_pbds::null_type, Hash>;
+using hash_set = HashMap<K, __gnu_pbds::null_type, Hash>;

@@ -17,6 +17,6 @@ while (!pq.empty()) {
     }
 }
 
-if (int(res.size()) < n) {
+if ((int)res.size() < n) {
     cout << "NOT A DAG" << nl;
 }

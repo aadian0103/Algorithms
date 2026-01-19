@@ -20,7 +20,7 @@ T rnd(T a, T b) {
 
 vector<int> gen_vector(int n, int L, int R) {
     vector<int> a(n);
-    for (int &x : a) x = rnd(L, R);
+    for (int& x : a) x = rnd(L, R);
     return a;
 }
 
@@ -44,17 +44,34 @@ vector<pair<int,int>> gen_tree(int n) {
     return edges;
 }
 
-vector<pair<int,int>> gen_graph(int n, int m, bool allow_self = false) {
-    set<pair<int,int>> used;
+vector<pair<int,int>> gen_graph(int n, int m) {
     vector<pair<int,int>> edges;
+    edges.reserve(m);
+
+    for (int i = 2; i <= n; i++) {
+        int p = rnd(1, i - 1);
+        edges.emplace_back(p, i);
+    }
+
+    set<pair<int,int>> used;
+    for (auto &e : edges) {
+        int u = e.first, v = e.second;
+        if (u > v) swap(u, v);
+        used.insert({u, v});
+    }
 
     while ((int)edges.size() < m) {
-        int u = rnd(1, n);
-        int v = rnd(1, n);
+        int u = rnd(1, n), v = rnd(1, n);
 
-        if (!allow_self && u == v) continue;
-        if (used.insert({u, v}).second) edges.emplace_back(u, v);
+        if (u == v) continue;
+        if (u > v) swap(u, v);
+
+        if (used.insert({u, v}).second) {
+            edges.emplace_back(u, v);
+        }
     }
+
+    ranges::shuffle(edges, RNG);
     return edges;
 }
 
